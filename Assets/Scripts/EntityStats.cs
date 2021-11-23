@@ -13,6 +13,7 @@ public abstract class EntityStats : MonoBehaviour
     public float maxHealth = 10;
     public Stat damage;
     public Stat armour;
+    public Stat speed;
 
     [Header("Events")]
     public UnityEvent onDeath;
@@ -22,7 +23,14 @@ public abstract class EntityStats : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public bool TakeDamage(int _damage)
+    /// <summary>
+    /// 0 = Damage was below 0;
+    /// 1 = Damage was dealt;
+    /// 2 = Entity was killed;
+    /// </summary>
+    /// <param name="_damage"></param>
+    /// <returns></returns>
+    public int TakeDamage(int _damage)
     {
         Log($"_damage before armour: {_damage}");
 
@@ -33,7 +41,7 @@ public abstract class EntityStats : MonoBehaviour
         if (_damage <= 0)
         {
             Log($"Damage was below 0 so the method is exiting: {_damage}");
-            return false;
+            return 0;
         }
 
         Log($"currentHealth before damage: {currentHealth}");
@@ -45,9 +53,10 @@ public abstract class EntityStats : MonoBehaviour
         if (currentHealth <= 0)
         {
             Die();
+            return 2;
         }
 
-        return true;
+        return 1;
     }
 
     public virtual void Die()
