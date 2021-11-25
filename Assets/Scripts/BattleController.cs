@@ -20,8 +20,8 @@ public class BattleController : MonoBehaviour
     public EntityStats enemy;
     public GameObject playerTurnUI;
 
-    public float aiCooldownTimer = 2.5f;
-    private float aiCooldownTimerCurrent;
+    public float enemyCooldownTimer = 1f;
+    private float currentEnemyCooldownTimer;
 
     private void Start()
     {
@@ -39,7 +39,7 @@ public class BattleController : MonoBehaviour
             playerTurnUI.SetActive(false);
         }
 
-        if (aiCooldownTimerCurrent <= 0 && state == State.ENEMY_TURN)
+        if (currentEnemyCooldownTimer <= 0 && state == State.ENEMY_TURN)
         {
             Log($"{enemy.gameObject.name} attacks {player.gameObject.name}");
             player.TakeDamage(enemy.damage.Value);
@@ -48,7 +48,7 @@ public class BattleController : MonoBehaviour
             state = State.PLAYER_TURN;
         }
 
-        aiCooldownTimerCurrent -= Time.deltaTime;
+        currentEnemyCooldownTimer -= Time.deltaTime;
     }
 
     public void StartBattle()
@@ -75,6 +75,7 @@ public class BattleController : MonoBehaviour
     {
         Log($"{player.gameObject.name} attacks {enemy.gameObject.name}");
 
+        // use the return int from the enemy's TakeDamage method and perform things based on the value
         switch(enemy.TakeDamage(player.damage.Value))
         {
             case 2:
@@ -84,7 +85,7 @@ public class BattleController : MonoBehaviour
             default:
                 Log($"{enemy.gameObject.name}'s turn...");
                 state = State.ENEMY_TURN;
-                aiCooldownTimerCurrent = aiCooldownTimer;
+                currentEnemyCooldownTimer = enemyCooldownTimer;
                 break;
         }
     }

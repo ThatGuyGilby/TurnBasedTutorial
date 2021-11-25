@@ -27,10 +27,6 @@ public class Stat
 
             return _totalValue;
         }
-        private set
-        {
-            this.baseValue = value;
-        }
     }
 
     public bool AddModifier(int _value)
